@@ -244,8 +244,17 @@ isearches."
     (kbd "<kp-subtract>")
     'smart-dash-isearch-insert-dash))
 
+;; The surest, cleanest way to undo the work of
+;; `smart-dash-isearch-install' would be to delete the buffer-local
+;; binding for isearch-mode-map, but if other modes have also
+;; overridden some isearch-mode-map bindings then that would clobber
+;; them as well.  So we leave the local binding alone and just set our
+;; bindings back to their default values
 (defun smart-dash-isearch-uninstall ()
-  (define-key isearch-mode-map "-" 'isearch-printing-char))
+  (when (local-variable-p 'isearch-mode-map)
+    (define-key isearch-mode-map "-" 'isearch-printing-char)
+    (define-key isearch-mode-map
+      (kbd "<kp-subtract>") 'isearch-printing-char)))
 
 (defun smart-dash-isearch-insert-gt ()
   "Isearch for a greater-than symbol.  If the preceeding
@@ -266,8 +275,10 @@ pointer member access comfortable."
     (setq isearch-mode-map (copy-keymap map)))
   (define-key isearch-mode-map ">" 'smart-dash-isearch-insert-gt))
 
+;; See comments on smart-dash-isearch-uninstall
 (defun smart-dash-c-isearch-uninstall ()
-  (define-key isearch-mode-map ">" 'isearch-printing-char))
+  (when (local-variable-p 'isearch-mode-map)
+    (define-key isearch-mode-map ">" 'isearch-printing-char)))
 
 ;;; Smart-Dash MiniBuffer Support ;;;
 
