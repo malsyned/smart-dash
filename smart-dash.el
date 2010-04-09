@@ -1,25 +1,28 @@
-;; Smart-Dash minor mode
-;; (C) 2008-2010 Dennis Lambe Jr. <malsyned_sd@malsyned.net>
+;;; smart-dash.el --- Smart-Dash minor mode
 
-;; This is a simple minor mode which causes the dash key to insert an
-;; underscore within C identifiers and a dash otherwise.  This allows
-;; you to type all_lowercase_c_identifiers as comfortably as you would
-;; lisp-style-identifiers.
-;;
-;; While Smart-Dash mode is active, you can type "C-q -" or use the
-;; dash on the numeric keypad to override it and insert a dash after a
-;; C identifier character.  You might need to do this if you want to
-;; type a cramped-looking expression like x-5.
-;;
-;; If Smart-Dash mode is activated while in a C-like mode (c-mode,
-;; c++-mode, and objc-mode by default, customizable with
-;; SMART-DASH-C-MODES) it will also activate Smart-Dash-C mode, which
-;; translates "_>" into "->" and "__" into "--" automatically so that
-;; struct pointer member access and postfix-decrement aren't made more
-;; difficult by Smart-Dash mode's tendency to insert underscores at
-;; the tail ends of identifiers whether you want it to or not.  Note
-;; that this will necessitate that you type literal underscores if you
-;; want more than one underscore at the end of an __identifier__.
+;; Copyright (C) 2008-2010 Dennis Lambe Jr.
+
+;; Author: Dennis Lambe Jr. <malsyned@malsyned.net>
+;; Webpage: http://malsyned.net/smart-dash.html
+
+;; Smart-Dash is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 2 of the License, or
+;; (at your option) any later version.
+
+;; Smart-Dash is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with Smart-Dash.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; Smart-Dash mode is a minor mode which redefines the dash key to
+;; insert an underscore within C-style identifiers and a dash
+;; otherwise.
 
 (defgroup smart-dash nil
   "Intelligently insert either a dash or an underscore depending
@@ -211,8 +214,26 @@ pointer member access comfortable."
    "Key map for `smart-dash-mode'.")
 
 (define-minor-mode smart-dash-mode
-  "Intelligently insert either a dash or an underscore depending
-on context."
+  "Redefine the dash key to insert an underscore within C-style
+identifiers and a dash otherwise.  This allows you to type
+all_lowercase_c_identifiers as comfortably as you would
+lisp-style-identifiers.
+
+While Smart-Dash mode is active, you can type \\[quoted-insert] -
+or use the dash on the numeric keypad to override it and insert a
+dash after a C-style identifier character.  You might need to do
+this if you want to type a cramped-looking expression like x-5.
+
+If Smart-Dash mode is activated while in a C-like mode (c-mode,
+c++-mode, and objc-mode by default, customizable with
+`smart-dash-c-modes') it will also activate Smart-Dash-C mode,
+which translates \"_>\" into \"->\" and \"__\" into \"--\"
+automatically so that struct pointer member access and
+postfix-decrement aren't made more difficult by Smart-Dash mode's
+tendency to insert underscores at the tail ends of identifiers
+whether you want it to or not.  Note that this will necessitate
+that you type literal underscores if you want more than one
+underscore in a row."
   nil "" smart-dash-mode-keymap
   (if smart-dash-mode
       (progn
@@ -225,10 +246,18 @@ on context."
 (easy-mmode-defmap smart-dash-c-mode-keymap
    ; Remove definition with (makunbound 'smart-dash-c-mode-keymap)
    '((">" . smart-dash-insert-gt))
-   "Key map supplement for `smart-dash-mode' when in a C-like major mode.")
+   "Key map supplement for `smart-dash-mode' when in a C-like
+major mode.  See `smart-dash-c-modes'")
 
 (define-minor-mode smart-dash-c-mode
-  "Set the > key to call `smart-dash-insert-gt'."
+  "Set the > key to call `smart-dash-insert-gt'.  Also modifies
+the behavior of the dash key so that the postfix-- operator can
+be typed normally (but shift will be needed for typing more than
+one underscore in a row).
+
+DO NOT ACTIVATE THIS MINOR MODE DIRECTLY.  Smart-Dash mode will
+activate it if the current major mode is listed in
+`smart-dash-c-modes'."
   nil "" smart-dash-c-mode-keymap
   (if smart-dash-c-mode
       (smart-dash-c-isearch-install)
