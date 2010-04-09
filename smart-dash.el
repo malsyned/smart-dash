@@ -37,7 +37,7 @@ pointer member access operator and __ should be replaced by the
   :group 'smart-dash
   :type '(repeat symbol))
 
-;;; Smart Dash Mode Keymaps and Mode Functions ;;;
+;;; Smart-Dash mode Keymaps and Mode Functions ;;;
 
 ;; I tried also mapping "_" to the inverse operation, but it made it
 ;; much more awkward to type double-underscored identifiers like
@@ -183,7 +183,7 @@ access comfortable."
                            'smart-dash-char-before-point
                            'smart-dash-in-regular-code-p))
 
-;;; Smart Dash iSearch Support ;;;
+;;; Smart-Dash iSearch Support ;;;
 
 (defun smart-dash-isearch-in-regular-code-p ()
   ;; Punt
@@ -269,9 +269,9 @@ pointer member access comfortable."
 (defun smart-dash-c-isearch-uninstall ()
   (define-key isearch-mode-map ">" 'isearch-printing-char))
 
-;;; Smart Dash MiniBuffer Support ;;;
+;;; Smart-Dash MiniBuffer Support ;;;
 
-;; Turning on Smart Dash Mode in all minibuffers started from a
+;; Turning on Smart-Dash mode in all minibuffers started from a
 ;; particular buffer seems like a good idea until you actually try
 ;; it. At that point you realize that it's a nuisance as often as a
 ;; help - for example, in execute-extended-command and eval-expression
@@ -280,29 +280,29 @@ pointer member access comfortable."
 ;;
 ;; The only way I've been able to come up with for getting around this
 ;; difficulty is with Allow/Deny lists for commands.  By default,
-;; Smart Dash mode will only come on in minibuffers started by
+;; Smart-Dash mode will only come on in minibuffers started by
 ;; commands in smart-dash-minibuffer-allow-commands.  I encourage my
 ;; users to send me examples of commands that they add to this list.
 ;;
-;; If you'd like to have Smart Dash Mode on in all minibuffers started
-;; from a Smart Dash buffer, set smart-dash-minibuffer-by-default to t
+;; If you'd like to have Smart-Dash mode on in all minibuffers started
+;; from a Smart-Dash buffer, set smart-dash-minibuffer-by-default to t
 ;; and tweak smart-dash-minibuffer-deny-commands to add exceptions.
 ;;
 ;; If you hate this feature altogether, set
 ;; smart-dash-minibuffer-enabled to nil.
 
 (defgroup smart-dash-minibuffer nil
-  "Activate Smart Dash Mode in the minibuffer
-for commands that are executed in Smart Dash Mode buffers."
+  "Activate Smart-Dash mode in the minibuffer
+for commands that are executed in Smart-Dash mode buffers."
   :prefix "smart-dash-minibuffer"
   :group 'smart-dash)
 
 (defcustom smart-dash-minibuffer-enabled t
   ; Remove definition with (makunbound 'smart-dash-minibuffer-enabled)
-  "If non-nil, activate Smart Dash Mode in the minibuffer for
+  "If non-nil, activate Smart-Dash mode in the minibuffer for
 some commands.
 
-The decision of which commands will have Smart Dash Mode
+The decision of which commands will have Smart-Dash mode
 activated in is controlled by `smart-dash-minibuffer-by-default',
 `smart-dash-minibuffer-allow-commands' and
 `smart-dash-minibuffer-deny-commands'."
@@ -311,10 +311,10 @@ activated in is controlled by `smart-dash-minibuffer-by-default',
 
 (defcustom smart-dash-minibuffer-by-default nil
   ; Remove definition with (makunbound 'smart-dash-minibuffer-by-default)
-  "If non-nil, activate Smart Dash Mode in the minibuffer for all
+  "If non-nil, activate Smart-Dash mode in the minibuffer for all
 commands except those listed in `smart-dash-minibuffer-deny-commands'.
 
-If nil (the default), activate Smart Dash Mode in the minibuffer
+If nil (the default), activate Smart-Dash mode in the minibuffer
 only for commands listed in `smart-dash-minibuffer-allow-commands'."
   :group 'smart-dash-minibuffer
   :type 'boolean)
@@ -331,7 +331,7 @@ only for commands listed in `smart-dash-minibuffer-allow-commands'."
     grep)
   ; Remove definition with
   ; (makunbound 'smart-dash-minibuffer-allow-commands)
-  "Commands whose minibuffer inputs should have Smart Dash Mode
+  "Commands whose minibuffer inputs should have Smart-Dash mode
 activated when `smart-dash-minibuffer-by-default' is nil."
   :group 'smart-dash-minibuffer
   :type '(repeat function))
@@ -342,8 +342,8 @@ activated when `smart-dash-minibuffer-by-default' is nil."
     find-file)
   ; Remove definition with
   ; (makunbound 'smart-dash-minibuffer-deny-commands)
-  "Commands whose minibuffer inputs should NOT have Smart Dash
-Mode activated when `smart-dash-minibuffer-by-default' is
+  "Commands whose minibuffer inputs should NOT have Smart-Dash
+mode activated when `smart-dash-minibuffer-by-default' is
 non-nil."
   :group 'smart-dash-minibuffer
   :type '(repeat function))
