@@ -24,6 +24,8 @@
 ;; insert an underscore within C-style identifiers and a dash
 ;; otherwise.
 
+;;; Code:
+
 (defgroup smart-dash nil
   "Intelligently insert either a dash or an underscore depending
 on context."
