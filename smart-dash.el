@@ -337,6 +337,7 @@ only for commands listed in `smart-dash-minibuffer-allow-commands'."
     replace-regexp
     search-forward
     search-forward-regexp
+    isearch-edit-string
     string-rectangle
     find-tag
     grep)
