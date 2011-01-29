@@ -362,7 +362,30 @@ non-nil."
   :group 'smart-dash-minibuffer
   :type '(repeat function))
 
+;; When a command uses the minibuffer more than once, all but the
+;; first will have `this-command' set to the command which exited the
+;; previous minibuffer.  Usually this is `exit-minibuffer' or
+;; `self-insert-and-exit', but there's no way to know for certain what
+;; commands may cause the exit.  When this occurs it prevents
+;; `this-command' from matching the Allow and Deny command lists.
+;;
+;; The solution used by Smart-Dash minibuffer support is to record the
+;; command that caused the previous minibuffer exit and, if that's the
+;; command that invoked the current minibuffer, to use the previous
+;; value of `this-command' to determine whether Smart-Dash minibuffer
+;; support should be enabled.
+(defvar smart-dash-minibuffer-last-exit-command nil)
+
+(defun smart-dash-minibuffer-exit ()
+  (setq smart-dash-minibuffer-last-exit-command this-command))
+
+(add-hook 'minibuffer-exit-hook 'smart-dash-minibuffer-exit)
+
+(defvar smart-dash-minibuffer-this-command nil)
+
 (defun smart-dash-minibuffer-install ()
+  (unless (eq this-command smart-dash-minibuffer-last-exit-command)
+    (setq smart-dash-minibuffer-this-command this-command))
   (let* ((selected-buffer (window-buffer (minibuffer-selected-window)))
          (sd-active
           (with-current-buffer selected-buffer smart-dash-mode))
@@ -370,9 +393,9 @@ non-nil."
           (with-current-buffer selected-buffer smart-dash-c-mode))
          (allow (and smart-dash-minibuffer-enabled
                      (if smart-dash-minibuffer-by-default
-                         (not (memq this-command
+                         (not (memq shart-dash-minibuffer-this-command
                                     smart-dash-minibuffer-deny-commands))
-                       (memq this-command
+                       (memq smart-dash-minibuffer-this-command
                              smart-dash-minibuffer-allow-commands)))))
     (when allow
       (if sd-active
