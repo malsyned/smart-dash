@@ -29,6 +29,7 @@
 (defgroup smart-dash nil
   "Intelligently insert either a dash or an underscore depending
 on context."
+  :group 'convenience
   :prefix "smart-dash")
 
 (defcustom smart-dash-c-modes '(c-mode c++-mode objc-mode)
