@@ -123,6 +123,16 @@ activate it if the current major mode is listed in
     (setq n 0))
   (char-before (+ (point) n)))
 
+(defun smart-dash-insert-or-overwrite (text)
+  "Insert or overwrite TEXT depending of overwrite-mode status.
+TEST can be a single character or a string.
+Multi-byte characters are handled properly."
+  (when overwrite-mode
+    (if (stringp text)
+        (delete-char (length text))
+      (delete-char 1)))
+  (insert text))
+
 ;; This function makes all of the decisions about whether to insert a
 ;; dash or an underscore, and how to change the preceeding text if
 ;; necessary.  It takes all buffer-inspection and buffer-modification
@@ -153,7 +163,7 @@ activate it if the current major mode is listed in
 
 If `smart-dash-c-mode' is activated, also replace __ with --."
   (interactive)
-  (smart-dash-do-insert 'insert
+  (smart-dash-do-insert 'smart-dash-insert-or-overwrite
                         'delete-backward-char
                         'bobp
                         'smart-dash-char-before-point
@@ -162,7 +172,7 @@ If `smart-dash-c-mode' is activated, also replace __ with --."
 (defun smart-dash-insert-dash ()
   "Insert a dash regardless of the preceeding character."
   (interactive)
-  (insert ?-))
+  (smart-dash-insert-or-overwrite ?-))
 
 (defun smart-dash-do-insert-gt (insertf deletef bobpf char-before-f codepf)
   (if (and (not (funcall bobpf))
@@ -180,7 +190,7 @@ an underscore, replace it with a dash.
 This behavior is desirable in order to make struct pointer member
 access comfortable."
   (interactive)
-  (smart-dash-do-insert-gt 'insert
+  (smart-dash-do-insert-gt 'smart-dash-insert-or-overwrite
                            'delete-backward-char
                            'bobp
                            'smart-dash-char-before-point
