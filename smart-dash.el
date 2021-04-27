@@ -54,6 +54,7 @@ pointer member access operator and __ should be replaced by the
      (,(kbd "<kp-subtract>") . smart-dash-insert-dash))
    "Key map for `smart-dash-mode'.")
 
+;;;###autoload
 (define-minor-mode smart-dash-mode
   "Redefine the dash key to insert an underscore within C-style
 identifiers and a dash otherwise.  This allows you to type
