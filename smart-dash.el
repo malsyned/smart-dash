@@ -140,24 +140,24 @@ Multi-byte characters are handled properly."
 ;; functions as arguments so that it can be used both to edit the
 ;; actual buffer and to edit the isearch-string.
 (defun smart-dash-do-insert (insertf deletef bobpf char-before-f regcodepf)
-  (let ((ident-re (if smart-dash-c-mode
-                      "[A-Za-z0-9]"
-                    "[A-Za-z0-9_]")))
-    (if (and (funcall regcodepf)
-             (not (funcall bobpf)))
-        (cond ((string-match ident-re (string (funcall char-before-f)))
-               (funcall insertf ?_))
-              ((and smart-dash-c-mode
-                    (eql ?_ (funcall char-before-f)))
-               (funcall deletef 1)
-               (funcall insertf "--"))
-              ((and smart-dash-c-mode
-                    (eql ?- (funcall char-before-f))
-                    (eql ?- (funcall char-before-f -1)))
-               (funcall deletef 2)
-               (funcall insertf "_--"))
-              (t (funcall insertf ?-)))
-      (funcall insertf ?-))))
+  (let ((ident-re "[A-Za-z0-9_]")
+        (dash-or-underscore "-"))
+    (when (and (funcall regcodepf)
+               (not (funcall bobpf)))
+      (do-c-fixup insertf deletef char-before-f)
+      (when (string-match ident-re (string (funcall char-before-f)))
+        (setf dash-or-underscore "_")))
+    (funcall insertf dash-or-underscore)))
+
+(defun do-c-fixup (insertf deletef char-before-f)
+  (when smart-dash-c-mode
+    (cond ((eql ?_ (funcall char-before-f))
+           (funcall deletef 1)
+           (funcall insertf "-"))
+          ((and (eql ?- (funcall char-before-f))
+                (eql ?- (funcall char-before-f -1)))
+           (funcall deletef 2)
+           (funcall insertf "_-")))))
 
 (defun smart-dash-insert ()
   "Insert an underscore following [A-Za-z0-9_], a dash otherwise.
@@ -176,13 +176,10 @@ If `smart-dash-c-mode' is activated, also replace __ with --."
   (smart-dash-insert-or-overwrite ?-))
 
 (defun smart-dash-do-insert-gt (insertf deletef bobpf char-before-f codepf)
-  (if (and (not (funcall bobpf))
-           (funcall codepf)
-           (= (funcall char-before-f) ?_))
-      (progn
-        (funcall deletef 1)
-        (funcall insertf "->"))
-    (funcall insertf ?>)))
+  (when (and (funcall codepf)
+             (not (funcall bobpf)))
+    (do-c-fixup insertf deletef char-before-f))
+  (funcall insertf ">"))
 
 (defun smart-dash-insert-gt ()
   "Insert a greater-than symbol.  If the preceeding character is
