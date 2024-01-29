@@ -391,10 +391,8 @@ non-nil."
 (defvar smart-dash-minibuffer-this-command-stack (list nil))
 
 (defun smart-dash-minibuffer-exit ()
-  (setq smart-dash-minibuffer-last-exit-command-stack
-        (cdr smart-dash-minibuffer-last-exit-command-stack)) ; pop
-  (setq smart-dash-minibuffer-this-command-stack
-        (cdr smart-dash-minibuffer-this-command-stack)) ; pop
+  (pop smart-dash-minibuffer-last-exit-command-stack)
+  (pop smart-dash-minibuffer-this-command-stack)
   (rplaca smart-dash-minibuffer-last-exit-command-stack this-command))
 
 (add-hook 'minibuffer-exit-hook 'smart-dash-minibuffer-exit)
@@ -421,10 +419,8 @@ non-nil."
           (smart-dash-mode))
       (if sd-c-active
           (smart-dash-c-mode))))
-  (setq smart-dash-minibuffer-last-exit-command-stack
-        (cons nil smart-dash-minibuffer-last-exit-command-stack))
-  (setq smart-dash-minibuffer-this-command-stack
-        (cons nil smart-dash-minibuffer-this-command-stack)))
+  (push nil smart-dash-minibuffer-last-exit-command-stack)
+  (push nil smart-dash-minibuffer-this-command-stack))
 
 (add-hook 'minibuffer-setup-hook 'smart-dash-minibuffer-install)
 
