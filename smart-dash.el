@@ -398,6 +398,12 @@ non-nil."
 (add-hook 'minibuffer-exit-hook 'smart-dash-minibuffer-exit)
 
 (defun smart-dash-minibuffer-install ()
+  ;; Initialize stacks if they are nil
+  (unless smart-dash-minibuffer-this-command-stack
+    (setq smart-dash-minibuffer-this-command-stack (list this-command)))
+  (unless smart-dash-minibuffer-last-exit-command-stack
+    (setq smart-dash-minibuffer-last-exit-command-stack (list this-command)))
+
   (unless (eq this-command
               (car smart-dash-minibuffer-last-exit-command-stack))
     (rplaca smart-dash-minibuffer-this-command-stack this-command))
